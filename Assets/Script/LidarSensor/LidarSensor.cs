@@ -109,7 +109,7 @@ public class LidarSensor : MonoBehaviour
     [SerializeField] private float range = 200.0f;
 
     [SerializeField]
-    LayerMask layerMask;
+    LayerMask layerMask = new LayerMask();
 
     private List<Ray> rayBuffer = new List<Ray>();
 
