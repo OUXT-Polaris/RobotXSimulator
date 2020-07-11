@@ -88,6 +88,10 @@ public class LidarSensor : MonoBehaviour
 
     void OnDrawGizmos()
     {
+        if(!showGizmos)
+        {
+            return;
+        }
         Gizmos.color = Color.red;
         foreach(var ray in rayBuffer){
             Gizmos.DrawRay (ray.origin, ray.direction * range);
@@ -110,6 +114,9 @@ public class LidarSensor : MonoBehaviour
 
     [SerializeField]
     LayerMask layerMask = new LayerMask();
+
+    [SerializeField]
+    bool showGizmos = true;
 
     private List<Ray> rayBuffer = new List<Ray>();
 
@@ -134,11 +141,7 @@ public class LidarSensor : MonoBehaviour
             cloud.Is_bigendian = true;
         }
         cloud.Header.Frame_id = frameId;
-        DateTime Epoch = new DateTime(1970, 1, 1, 0, 0, 0, 0).ToLocalTime();
-        TimeSpan span = (DateTime.Now - Epoch);
-        double total_secs = span.TotalSeconds;
-        cloud.Header.Stamp.Sec = (int)Math.Floor(total_secs);
-        cloud.Header.Stamp.Nanosec = (uint)((total_secs - Math.Floor(total_secs))*Math.Pow(10,9));
+        cloud.Header.Stamp = TimeUtil.getStamp();
         cloud.Point_step = 12;
         cloud.Height = 1;
         cloud.Is_dense = true;
